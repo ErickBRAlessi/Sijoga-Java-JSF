@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <ui:include src="/WEB-INF/bootstraper.xhtml" />
+    </h:head>
+    <h:outputStylesheet library="css" name="processo.css"></h:outputStylesheet>
+    <h:body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" style="position:sticky; top:0; z-index: 999">
+            <div class="container" >
+                <a class="navbar-brand" href="#">
+                    <span style="font-size:1.4rem; font-weight: 400">SIJOGA - JUÍZ
+                        <span class="material-icons" style=" margin-left: 10px">
+                            gavel
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                    <h:form>
+                        <ul class="navbar-nav ml-auto">
+
+                            <li class="nav-pills">
+                                <h:commandLink value="Voltar para processo" action="#{processoPage.voltarParaProcessoParte()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                            <li class="nav-pills">
+                                <h:commandLink value="Logout" action="#{loginMB.doLogout()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                        </ul>
+                    </h:form>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="container" style="margin-bottom: 10px">
+            <h1 class="mt-4">Processo: #{processoPage.processo.pkId}</h1>
+            <p>Selecionar advogado para o processo </p>
+        </div>
+
+        <!-- Detalhes do processo e cards das fases -->
+        <div class="processo-container">
+            <h:messages class="alert alert-warning"/>
+            <!-- Detalhes do processo -->
+            <div class="processo-detalhes">
+                <h5 style="margin-bottom:35px">Detalhes do processo</h5>
+                <div>
+                    <span>ID do processo: </span><span style="font-weight: 500">#{processoPage.processo.pkId}</span>
+                </div>
+                <div>
+                    <span>Juiz: </span><span style="font-weight: 500">#{processoPage.processo.juiz}</span>
+                </div>
+                <div>    
+                    <span>Parte promovente: </span><span style="font-weight: 500">#{processoPage.processo.promovente}</span>
+                </div>
+                <div>
+                    <span>Advogado parte promovente: </span><span style="font-weight: 500"> #{processoPage.processo.advPromovente}</span>
+                </div>
+                <div>
+                    <span>Parte promovida: </span><span style="font-weight: 500">#{processoPage.processo.promovido}</span>
+                </div>
+                <div>
+                    <span>Advogado parte promovida: </span><span style="font-weight: 500">#{processoPage.processo.advPromovido}</span>
+                </div>
+                <div>
+                    <span>Status do processo: </span><span style="font-weight: 500">#{processoPage.processo.status}</span>
+                </div>
+                <div>
+                    <span>Vencedor: </span><span style="font-weight: 500">#{processoPage.processo.vencedor}</span>
+                </div>
+            </div>
+
+            <!-- Escolha de advogado -->
+            <h5 style="margin-bottom:25px">Digite o OAB de um advogado para associa-lo ao processo</h5>
+            <h:messages class="alert alert-danger" />
+            <h:form>
+                <div class="form-group">
+                    <label for="oabNovoAdv">OAB do advogado para ser associado ao processo</label>
+                    <h:inputText class="form-control" id="oabPromovido" value="#{processoPage.oabNovoAdvStr}" required="true" requiredMessage="campo obrigatório"
+                                 onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"/>
+                    <h:message for="oabNovoAdv" class="msg-erro" />
+                </div>
+                <div class="form-group">
+                    <h:commandButton value="Associar advogado" action="#{processoPage.associarAdvogado()}" class="btn btn-primary"/>
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

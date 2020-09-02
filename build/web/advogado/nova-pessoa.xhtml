@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <ui:include src="/WEB-INF/bootstraper.xhtml" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    </h:head>
+    <h:outputStylesheet library="css" name="processo.css"></h:outputStylesheet>
+
+    <h:body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top" style="position:sticky; top:0; z-index: 999">
+            <div class="container" >
+                <a class="navbar-brand" href="#">
+                    <span style="font-size:1.4rem; font-weight: 400">SIJOGA - ADVOGADO
+                        <span class="material-icons" style=" margin-left: 10px">
+                            work
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                    <h:form>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-pills">
+                                <h:commandLink value="Voltar para novo processo (e cancelar cadastro)" action="#{advogadoPage.criarNovoProcesso()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                            <li class="nav-pills">
+                                <h:commandLink value="Logout" action="#{loginMB.doLogout()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                        </ul>
+                    </h:form>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="container" style="margin-bottom: 10px">
+            <h1 class="mt-4">Nova pessoa</h1>
+            <p>Formulário para cadastro de uma pessoa no sistema</p>
+            <h:messages class="alert alert-danger"/>
+        </div>
+
+        <!-- Detalhes do processo e cards das fases -->
+        <div class="processo-container">
+
+            <!-- Formulario -->
+            <h5 style="margin-bottom:25px">Cadastro de pessoa</h5>
+            <div class="formulario-container">
+                <h:form>
+                    <div class="form-group">
+                        <label for="cpf">CPF</label>
+                        <p:inputMask class="form-control" id="cpf" mask="999.999.999-99" value="#{novaPessoa.cpf}" required="true" requiredMessage="Campo obrigatório" />
+                        <h:message for="cpf" class="msg-erro"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <h:inputText class="form-control" id="nome" value="#{novaPessoa.nome}" required="true" requiredMessage="Campo obrigatório" />
+                        <h:message for="nome" class="msg-erro"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sobrenome">Sobrenome</label>
+                        <h:inputText class="form-control" id="sobrenome" value="#{novaPessoa.sobrenome}" required="true" requiredMessage="Campo obrigatório" />
+                        <h:message for="sobrenome" class="msg-erro"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nascimento">Data de nascimento</label><br />
+                        <p:calendar id="nascimento" value="#{novaPessoa.nasc}" navigator="true" pattern="dd/MM/yyyy" yearRange="c-100:c+0" required="true" maxdate="today" requiredMessage="Campo obrigatório"/><br />
+                        <h:message for="nascimento" class="msg-erro"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="logradouro">Endereço</label>
+                        <h:inputText class="form-control" id="logradouro" value="#{novaPessoa.endereco.complemento}" required="true" requiredMessage="Campo obrigatório" />
+                        <h:message for="logradouro" class="msg-erro"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cep">CEP</label>
+                        <p:inputMask class="form-control" id="cep" mask="99999-999" value="#{novaPessoa.cepStr}" required="true" requiredMessage="Campo obrigatório" />
+                        <h:message for="cep" class="msg-erro"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h:commandButton value="Salvar e voltar para novo processo" action="#{novaPessoa.salvarNovaPessoa()}" class="btn btn-primary"/>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </h:body>
+</html>
+

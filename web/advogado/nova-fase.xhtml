@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <ui:include src="/WEB-INF/bootstraper.xhtml" />
+    </h:head>
+    <h:outputStylesheet library="css" name="processo.css"></h:outputStylesheet>
+    <h:body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top" style="position:sticky; top:0; z-index: 999">
+            <div class="container" >
+                <a class="navbar-brand" href="#">
+                    <span style="font-size:1.4rem; font-weight: 400">SIJOGA - ADVOGADO
+                        <span class="material-icons" style=" margin-left: 10px">
+                            work
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                    <h:form>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-pills">
+                                <h:commandLink value="Voltar para processo selecionado (e cancelar criação de fase)" action="#{novaFase.voltarParaProcesso()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                            <li class="nav-pills">
+                                <h:commandLink value="Logout" action="#{loginMB.doLogout()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                        </ul>
+                    </h:form>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="container" style="margin-bottom: 10px">
+            <h1 class="mt-4">Nova fase</h1>
+            <p>Adicionar nova fase ao processo: #{novaFase.processo.pkId} </p>
+        </div>
+
+        <!-- Detalhes do processo e cards das fases -->
+        <div class="processo-container">
+            <h:messages class="alert alert-warning" />
+            <!-- Detalhes do processo -->
+            <div class="processo-detalhes">
+                <h5 style="margin-bottom:35px">Detalhes do processo</h5>
+                <div>
+                    <span>ID do processo: </span><span style="font-weight: 500">#{novaFase.processo.pkId}</span>
+                </div>
+                <div>
+                    <span>Juiz: </span><span style="font-weight: 500">#{novaFase.processo.juiz}</span>
+                </div>
+                <div>    
+                    <span>Parte promovente: </span><span style="font-weight: 500">#{novaFase.processo.promovente}</span>
+                </div>
+                <div>
+                    <span>Advogado parte promovente: </span><span style="font-weight: 500"> #{novaFase.processo.advPromovente}</span>
+                </div>
+                <div>
+                    <span>Parte promovida: </span><span style="font-weight: 500">#{novaFase.processo.promovido}</span>
+                </div>
+                <div>
+                    <span>Advogado parte promovida: </span><span style="font-weight: 500">#{novaFase.processo.advPromovido}</span>
+                </div>
+                <div>
+                    <span>Status do processo: </span><span style="font-weight: 500">#{novaFase.processo.status}</span>
+                </div>
+                <div>
+                    <span>Vencedor: </span><span style="font-weight: 500">#{novaFase.processo.vencedor}</span>
+                </div>
+            </div>
+
+            <!-- Formulario -->
+            <h5 style="margin-bottom:25px">Nova fase</h5>
+            <div class="formulario-container">
+
+                <h:form enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="tipo">Selecione um tipo</label>
+                        <h:selectOneMenu value = "#{novaFase.tipo}" id="tipo" requiredMessage="Valor é obrigatório"> 
+                            <f:selectItem itemValue = "INFORMATIVA" itemLabel = "Informativa" /> 
+                            <f:selectItem itemValue = "DELIBERACAO" itemLabel = "Deliberativa" /> 
+                        </h:selectOneMenu> 
+                    </div>
+                    <div class="form-group">
+                        <label for="titulo">Título</label>
+                        <h:inputText value="#{novaFase.titulo}" class="form-control" id="titulo" required="true" requiredMessage="Campo obrigatório" />
+                        <h:message for="titulo" class="msg-erro" />
+                    </div>
+                    <div class="form-group">
+                        <label for="reclamacao">Reclamação</label>
+                        <h:inputTextarea rows="5" cols="150" class="form-control" id="reclamacao" value="#{novaFase.reclamacao}"  required="true" requiredMessage="Campo obrigatório"/>
+                        <h:message for="reclamacao" class="msg-erro"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="upload">Selecione UM arquivo para anexar (Apenas pdf)</label>
+                        <h:inputFile value="#{novaFase.file}" id="upload" class="btn btn-basic" />
+                    </div>
+                    <h:commandButton value="Salvar" action="#{novaFase.salvarNovaFase()}" class="btn btn-primary"/>
+                </h:form>
+            </div>
+        </div>
+    </h:body>
+</html>
+

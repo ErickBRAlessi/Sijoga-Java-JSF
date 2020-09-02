@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AbertosAdv" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5df49fa2-5497-46cf-9c16-8970d369ede1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="OAB_ADV" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_INIC" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_FIM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select proc.pk_id as num_processo, pessoa.nome, pessoa.sobrenome, pt.tipo, proc.status, proc.data_abertura as data, pessoa2.nome as nome_juiz, pessoa2.sobrenome as snome_juiz
+from tb_advogado_parte advpt, tb_parte pt, tb_advogado adv, tb_pessoa pessoa, tb_pessoa pessoa2, tb_processo proc, tb_juiz juiz
+where adv.pk_oab = $P{OAB_ADV}
+and   advpt.oab_adv = $P{OAB_ADV}
+and advpt.id_parte = pt.pk_id
+and pt.cpf = pessoa.pk_cpf
+and (proc.promovente = advpt.id_parte
+or  proc.promovido = advpt.id_parte)
+and proc.oab_juiz = juiz.pk_oab
+and juiz.cpf = pessoa2.pk_cpf
+and proc.status = 'ABERTO'
+AND (data_abertura >= $P{DATA_INIC}
+AND data_abertura <= $P{DATA_FIM});
+]]>
+	</queryString>
+	<field name="num_processo" class="java.lang.Integer"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="sobrenome" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="data" class="java.sql.Timestamp"/>
+	<field name="nome_juiz" class="java.lang.String"/>
+	<field name="snome_juiz" class="java.lang.String"/>
+	<variable name="adv_nome_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="34" uuid="787e7c54-3ab4-4a86-adbc-042468e42e33"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA['PROCESSOS ABERTOS']]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="55" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="54b561c7-f841-4ff1-a2c7-d3ebf649a982"/>
+				<textFieldExpression><![CDATA['OAB:']]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="e18a53c5-942d-401e-9369-fb6f30b3f40c"/>
+				<textFieldExpression><![CDATA[$P{OAB_ADV}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="27" height="20" uuid="7fe8d8e4-2c1a-495a-bb6b-056a5d2842c6"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="0" width="54" height="20" uuid="e179bf7b-620a-4d3a-ab8b-834937c8b56d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="81" y="0" width="90" height="20" uuid="9e4e562e-57ae-4239-87e7-5be60734a27c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="0" width="93" height="20" uuid="25560ee1-7263-4ec8-b79a-537fa4426bc8"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="0" width="72" height="20" uuid="f9445ee9-0888-4cff-a1d6-0aa1d5bd3a3e"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STATUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="336" y="0" width="63" height="20" uuid="c9f64342-5648-4a46-a2aa-41e42831031c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUIZ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="0" width="58" height="20" uuid="91e09fe2-e085-47bc-91d5-2a27695e2711"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="499" y="0" width="100" height="20" uuid="aec10e1d-a103-46fa-ab53-2c5fef48089d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="27" height="20" uuid="755605b4-7fca-4f89-9ce6-b25a38089ff0"/>
+				<textFieldExpression><![CDATA[$F{num_processo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="0" width="54" height="20" uuid="c6c20b35-3241-45e1-819d-f05bb7ab536e"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="0" width="90" height="20" uuid="94752107-7851-478b-a357-7e27eab61b54"/>
+				<textFieldExpression><![CDATA[$F{sobrenome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="171" y="0" width="93" height="20" uuid="09e8dc4f-3ee1-436f-a58b-e0aa27d88cb4"/>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="264" y="0" width="72" height="20" uuid="44f7f5c2-9eec-4f83-9b79-5d3cfe083d62"/>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="0" width="63" height="20" uuid="c99137ba-fe76-466d-8015-b2feb4132db1"/>
+				<textFieldExpression><![CDATA[$F{nome_juiz}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="0" width="100" height="20" uuid="1e5028c0-7a61-4fb8-b06e-e7a29c18749a"/>
+				<textFieldExpression><![CDATA[$F{snome_juiz}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="499" y="0" width="56" height="20" uuid="5024c4eb-f13f-4ffd-9769-09bcf890d483"/>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="34" width="100" height="20" uuid="03f693d2-7318-4196-bbd0-336830b85eaa"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

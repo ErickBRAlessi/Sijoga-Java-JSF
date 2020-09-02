@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <ui:include src="/WEB-INF/bootstraper.xhtml" />
+    </h:head>
+    <h:outputStylesheet library="css" name="processo.css"></h:outputStylesheet>
+    <h:body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" style="position:sticky; top:0; z-index: 999">
+            <div class="container" >
+                <a class="navbar-brand" href="#">
+                    <span style="font-size:1.4rem; font-weight: 400">SIJOGA - JUÍZ
+                        <span class="material-icons" style=" margin-left: 10px">
+                            gavel
+                        </span>
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                    <h:form>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-pills">
+                                <h:commandLink value="Voltar para processos" action="#{juizPage.voltarParaProcessos()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                            <li class="nav-pills">
+                                <h:commandLink value="Logout" action="#{loginMB.doLogout()}" style="margin: 5px" styleClass="nav-link"/>    
+                            </li>
+                        </ul>
+                    </h:form>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="container" style="margin-bottom: 10px">
+            <h1 class="mt-4">Processo: #{processoPage.processo.pkId}</h1>
+            <p>Detalhes e fases do processo selecionado </p>
+        </div>
+
+        <!-- Detalhes do processo e cards das fases -->
+        <div class="processo-container">
+
+            <h:messages class="alert alert-danger"/>
+
+            <!-- Detalhes do processo -->
+            <div class="processo-detalhes">
+                <h5 style="margin-bottom:35px">Detalhes do processo</h5>
+                <div>
+                    <span>ID do processo: </span><span style="font-weight: 500">#{processoPage.processo.pkId}</span>
+                </div>
+                <div>
+                    <span>Juiz: </span><span style="font-weight: 500">#{processoPage.processo.juiz}</span>
+                </div>
+                <div>    
+                    <span>Parte promovente: </span><span style="font-weight: 500">#{processoPage.processo.promovente}</span>
+                </div>
+                <div>
+                    <span>Advogado parte promovente: </span><span style="font-weight: 500"> #{processoPage.processo.advPromovente}</span>
+                </div>
+                <div>
+                    <span>Parte promovida: </span><span style="font-weight: 500">#{processoPage.processo.promovido}</span>
+                </div>
+                <div>
+                    <span>Advogado parte promovida: </span><span style="font-weight: 500">#{processoPage.processo.advPromovido}</span>
+                </div>
+                <div>
+                    <span>Status do processo: </span><span style="font-weight: 500">#{processoPage.processo.status}</span>
+                </div>
+                <div>
+                    <span>Vencedor: </span><span style="font-weight: 500">#{processoPage.processo.vencedor}</span>
+                </div>
+            </div>
+
+            <!-- Fases -->
+            <h5 style="margin-bottom:25px">Fases</h5>
+
+            <ui:repeat var="f" value="#{processoPage.fases}" varStatus="status">
+                <div class="card #{processoPage.getBGClass(f.status)}" style="width: 100%; margin-bottom: 20px">
+                    <div class="card-body">
+                        <h5 class="card-title">ID da fase: #{f.pkId}</h5>
+                        <div class="fase-detalhes">
+                            <div>
+                                <span>Título: </span><span style="font-weight: 500">#{f.titulo}</span>
+                            </div>
+                            <div>
+                                <span>Data de abertura: </span>
+                                <h:outputText value="#{f.dataAbertura}" style="font-weight:500" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="#{initParam.timezone}"/>
+                                </h:outputText>
+                            </div>
+                            <div>
+                                <span>Status: </span><span style="font-weight: 500">#{f.status}</span>
+                            </div>
+                            <div>
+                                <span>Advogado de abertura: </span><span style="font-weight: 500">#{f.parte.listOfAdvogadoParte.get(0).advogado.pessoa.nome} #{f.parte.listOfAdvogadoParte.get(0).advogado.pessoa.sobrenome}</span>
+                            </div>
+                            <div>
+                                <span>Reclamação: </span><span style="font-weight: 500">#{f.reclamacaoParte}</span>
+                            </div>
+
+                            <div>
+                                <span>Justificativa do juiz: </span><span style="font-weight: 500">#{(processoPage.converteDecisaoJuiz(f.status) ? "N/A" : f.justificativaJuiz)}</span>
+                            </div>
+                            <div>
+                                <span>Data de decisão: </span>
+                                <h:outputText value="#{f.dataDecisao}" style="font-weight:500" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="#{initParam.timezone}"/>
+                                </h:outputText>
+                            </div>
+                            <div>
+                                <h:form rendered="#{f.documento != null}">
+                                    <span>Anexos: </span><span style="font-weight: 500"></span>
+                                    <h:commandLink action="#{processoPage.baixarPDF(f)}">
+                                        <span>Visualizar arquivo</span>
+                                        <span class="material-icons" style="margin-left:5px">
+                                            picture_as_pdf
+                                        </span>
+                                    </h:commandLink>
+                                </h:form>
+                            </div>
+                            <div class="intimacao-fase #{processoPage.showIntimacao(f)}">
+                                <h5 class="card-title">Dados da intimação</h5>
+
+                                <div>
+                                    <span><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="ID da intimação" /></span>
+                                    <span style="font-weight:500"><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="#{f.listOfIntimacao.get(0).pkId}" /></span>
+                                </div>
+                                <div>
+                                    <span><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="Data da intimação" /></span>
+                                    <span style="font-weight:500">
+                                        <h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="#{f.listOfIntimacao.get(0).dataAbertura}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="#{initParam.timezone}"/>
+                                        </h:outputText>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="Cod. Oficial de justiça" /></span>
+                                    <span style="font-weight:500"><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="#{f.listOfIntimacao.get(0).oficialDeJustica}" /></span>
+                                </div>
+                                <div>
+                                    <span><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="Intimado" /></span>
+                                    <span style="font-weight:500"><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="#{processoPage.getIntimado(f.listOfIntimacao.get(0).intimado)}" /></span>
+                                </div>
+                                <div>
+                                    <span><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="Intimação efetivada?" /></span>
+                                    <span style="font-weight:500"><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="#{f.listOfIntimacao.get(0).isEfetivada ? 'SIM' : 'NÃO'}" /></span>
+                                </div>
+                                <div>
+                                    <span><h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="Data efetivação" /></span>
+                                    <span style="font-weight:500">
+                                        <h:outputText rendered="#{f.listOfIntimacao.size() > 0}" value="#{f.listOfIntimacao.get(0).dataExecucaoIntimacao eq null ? 'N/A' : f.listOfIntimacao.get(0).dataExecucaoIntimacao}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="#{initParam.timezone}"/>
+                                        </h:outputText>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Deliberação de uma fase -->
+                    <h:panelGroup rendered="#{f.status eq 'DELIBERACAO'}">
+                        <div class="card-footer">
+
+                            <h:form  id="deliberacaoPanel">
+
+                                <div class="form-group">
+                                    <label for="decisao">Selecione a decisão</label><br />
+                                    <h:selectOneMenu value = "#{processoPage.decisao}" id="decisao" required="true" requiredMessage="Valor é obrigatório" valueChangeListener="#{processoPage.alteraFilhaDaPuta}"> 
+                                        <f:selectItem itemLabel = "Pedido aceito" itemValue = "PEDIDO ACEITO" /> 
+                                        <f:selectItem itemLabel = "Pedido negado" itemValue = "PEDIDO NEGADO" /> 
+                                        <f:selectItem itemLabel = "Intimação" itemValue = "PEDIDO INTIMACAO" /> 
+                                        <f:selectItem itemLabel = "Encerrar processo" itemValue = "ENCERRADO" />
+                                        <f:ajax render="deliberacaoPanel"/>
+                                    </h:selectOneMenu>
+                                    <h:message for="decisao" class="msg-erro"/>
+                                </div>
+
+                                <!-- Formulários condicionais -->
+
+                                <!-- Formulário condicional de Pedido de intimação -->
+                                <div class="#{processoPage.classeBurra}">
+                                    <div class="form-group">
+                                        <label for="intimado">Selecione a parte intimada</label><br />
+                                        <h:selectOneMenu value="#{processoPage.intimado}" id="intimado" required="true" requiredMessage="Valor é obrigatório">
+                                            <f:selectItem itemLabel = "Parte promovente" itemValue = "PROMOVENTE"/>
+                                            <f:selectItem itemLabel = "Parte promovida" itemValue = "PROMOVIDO"/>
+
+                                        </h:selectOneMenu>
+                                        <h:message for="intimado" class="msg-erro"/>
+                                    </div>
+                                    
+                                    <!-- LISTA DOS OFICIAIS VINDO DO WEB SERVICE -->
+                                    <div class="form-group">
+                                        <label for="oficial">Selecione o oficial de justiça</label><br />
+                                        
+                                        <h:selectOneMenu id="oficialId" value="#{processoPage.oficialId}" required="true" requiredMessage="Valor é obrigatório">
+                                            <f:selectItems value="#{processoPage.listaOficial}" var="oficialJustica" itemValue="#{oficialJustica.id}" itemLabel="#{oficialJustica.nome}" />
+                                        </h:selectOneMenu>
+                                        
+                                        
+                                        <h:message for="oficial" class="msg-erro"/>
+                                    </div>
+                                </div>
+
+                                <!-- Formulário condicional de encerramento -->
+                                <div class="#{processoPage.classeFilhaDaPuta}">
+                                    <div class="form-group">
+                                        <label for="vencedor">Selecione a parte vencedora</label>
+                                        <h:selectOneMenu value="#{processoPage.vencedor}" id="vencedor" required="true" requiredMessage="Valor é obrigatório" >
+                                            <f:selectItem itemValue = "PROMOVENTE" itemLabel = "Parte promovente" />
+                                            <f:selectItem itemValue = "PROMOVIDO" itemLabel = "Parte promovida" />
+                                        </h:selectOneMenu>
+                                        <h:message for="vencedor" class="msg-erro"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="justificativa">Justificativa</label>
+                                    <h:inputTextarea rows="5" cols="150" class="form-control" id="justificativa" value="#{processoPage.justificativa}"  required="true" requiredMessage="Campo obrigatório"/>
+                                    <h:message for="justificativa" class="msg-erro"/>
+                                </div>
+                                <h:commandButton value="Deliberar" action="#{processoPage.deliberarFase()}" class="btn btn-primary"/>
+                            </h:form>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </ui:repeat>
+
+        </div>
+    </h:body>
+</html>
+
